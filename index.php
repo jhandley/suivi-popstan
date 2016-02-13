@@ -44,7 +44,7 @@ function recupererCasesDuServeurCSPro($heureDerniereMiseAJour) {
 	}
 	curl_setopt($curlHandle, CURLOPT_URL, $url);
 	
-	// Retour de la reponse (ne pas l'imprimir)
+	// Retour de la reponse (ne pas l'afficher)
 	curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 
 	// Lancer la requete
@@ -106,7 +106,12 @@ function parseRecord($record) {
 function insererCasesDansBaseDeDonnees($cases, $conn) {
 	
 	foreach ($cases as &$case) {
-		$records = array_map('parseRecord', $case['data']);
+		
+		// Convertir les enregistrement du format text au arrays associatives
+		$records = array();
+		foreach ($case['data'] as &$record) {
+			array_push($records, parseRecord($record));
+		}
 
 		// Les identifiants seront de meme pour chaque enregistrement dans le cas
 		// alors on peut les prendre chez le premier enregistrement.
